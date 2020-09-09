@@ -15,3 +15,37 @@ const user = {
 };
 
 output(user);
+
+
+const machine = {
+  initial: 'idle',
+  states: {
+    idle: {
+      on: {
+        FETCH: 'pending'
+      }
+    },
+    pending: {
+      on: {
+        RESOLVE: 'resolved',
+        REJECT: 'rejected'
+      }
+    },
+    resolved: {},
+    rejected: {}
+  }
+}
+
+function transition(state, event) {
+  return machine
+    .states[state]?.on?.[event]
+    || state;
+};
+
+let currentState = machine.initial;
+const send = (event) => {
+  const nextState = transition(currentState, event);
+  currentState = nextState;
+}
+
+window.send = send;
